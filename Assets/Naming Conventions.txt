@@ -1,0 +1,2 @@
+Member Variables: m_MemberVariable
+variables created in scope _variableName;
