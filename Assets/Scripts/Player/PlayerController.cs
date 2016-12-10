@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 
@@ -14,6 +15,8 @@ public class PlayerController : MonoBehaviour {
     public float m_DoubletapTime = 0.5f;
     private float m_DTRemaining;
     private int m_ButtonCount = 0;
+
+    public bool m_IsDead = false;
 
     public Rigidbody m_RB;
     public GameObject m_Body;
@@ -31,29 +34,46 @@ public class PlayerController : MonoBehaviour {
 
     private List<Legs> m_Legs = new List<Legs>();
     
+
     void Start()
     {
+
         //m_RB = GetComponent<Rigidbody>();
         m_DTRemaining = m_DoubletapTime;
         m_BoostAmount = m_MaxBoost;
-        GetLegs();
+        //GetLegs();
         Debug.Log(m_Legs.Count);
     }
 
     void Update()
     {
+        if (m_IsDead)
+            return;
+        // If we're over the pause menu UI, we don't want to detect clicks for movement
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // TODO: Move this into it's own input function, if you like?
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseMenu.m_IsPaused = true;
+        }
+
         Jump();
         // compare Vector3.Up and .Right against current transform.direction
     }
 
     void FixedUpdate()
     {
+        if (m_IsDead)
+            return;
         //Move();
         Jump();
         //Dash();
         LookAtMouse();
         //m_RB.velocity = new Vector3(Mathf.Clamp(m_RB.velocity.x, -m_MaxVelocity, m_MaxVelocity), m_RB.velocity.y, m_RB.velocity.z);
     }
+
 
     void LookAtMouse()
     {
@@ -166,14 +186,16 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void GetLegs()
+    public void GetLegs(int legIndex)
     {
+        Transform f;
         for (int i = 0; i < m_LegParent.transform.childCount; i++)
         {
-            var f = m_LegParent.transform.GetChild(i);
-            for (int j = 0; j < f.childCount; j++)
+            f = m_LegParent.transform.GetChild(i);
+            
+            if (i == legIndex)
             {
-                m_Legs.Add(f.transform.GetChild(j).GetComponent<Legs>());
+                f.gameObject.SetActive(false);
             }
         }
     }

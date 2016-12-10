@@ -8,9 +8,20 @@ public class PauseMenu : MonoBehaviour
     public GameObject PauseMenuObject;
     public Slider m_ScreenShakeSlider;
 
+    public static bool m_IsPaused;
+
     private void Start()
     {
         SetShakeDamperValue();
+    }
+
+    private void Update()
+    {
+        if (m_IsPaused && !PauseMenuObject.activeInHierarchy)
+        {
+            Time.timeScale = 0.0f;
+            PauseMenuObject.SetActive(true);
+        }
     }
 
     public void SetShakeDamperValue()
@@ -27,5 +38,7 @@ public class PauseMenu : MonoBehaviour
     public void BtnUnpause()
     {
         PauseMenuObject.SetActive(false);
+        m_IsPaused = false;
+        Time.timeScale = 1.0f;
     }
 }

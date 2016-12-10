@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour {
 
     public float m_SmoothTime;
+    public float m_Depth = -20.0f;
     private Vector3 m_RefVec = Vector3.zero;
 
     public Transform m_Player;
@@ -16,7 +17,7 @@ public class CameraFollow : MonoBehaviour {
 
     void SetPosition()
     {
-        Vector3 _target = m_Player.TransformPoint(new Vector3(0, 0, -20));
+        Vector3 _target = m_Player.TransformPoint(new Vector3(0, 0, m_Depth));
         transform.position = Vector3.SmoothDamp(transform.position, _target, ref m_RefVec, m_SmoothTime);
     }
 
