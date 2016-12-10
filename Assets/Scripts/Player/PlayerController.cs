@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour {
 
     public Slider m_BoostSlider;
     public float m_MaxBoost = 2f;
+    public float m_BoostRefillTime = 5f;
+    private float m_RefilledAmount;
     private float m_BoostAmount = 2f;
     private bool m_Refilling = false;
 
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour {
         //m_RB = GetComponent<Rigidbody>();
         m_DTRemaining = m_DoubletapTime;
         m_BoostAmount = m_MaxBoost;
+        m_RefilledAmount = m_BoostRefillTime;
         //GetLegs();
         Debug.Log(m_Legs.Count);
     }
@@ -110,7 +113,7 @@ public class PlayerController : MonoBehaviour {
             m_RB.AddForce(transform.up * m_JumpPower, ForceMode.Impulse);
             //transform.DOMove(transform.position + transform.up, 0.2f);
         }
-        if(Input.GetMouseButton(0) && m_BoostAmount >= 0 && !m_Refilling)
+        if(Input.GetMouseButton(1) && m_BoostAmount >= 0 && !m_Refilling)
         {
             if(!m_Ink.isPlaying)
             {
@@ -135,13 +138,20 @@ public class PlayerController : MonoBehaviour {
     {
         if(m_Refilling)
         {
-            if (m_BoostAmount <= m_MaxBoost)
+            m_RefilledAmount -= Time.deltaTime;
+            if(m_RefilledAmount <= 0)
             {
-                m_BoostAmount += Time.deltaTime;
-                m_BoostSlider.value = m_BoostAmount;
+                if (m_BoostAmount <= m_MaxBoost)
+                {
+                    m_BoostAmount += Time.deltaTime;
+                    m_BoostSlider.value = m_BoostAmount;
+                }
+                else
+                {
+                    m_Refilling = false;
+                    m_RefilledAmount = m_BoostRefillTime;
+                }
             }
-            else
-                m_Refilling = false;
         }
     }
     
