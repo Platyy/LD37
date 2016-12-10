@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour {
         m_BoostAmount = m_MaxBoost;
         m_RefilledAmount = m_BoostRefillTime;
         //GetLegs();
-        Debug.Log(m_Legs.Count);
+        //Debug.Log(m_Legs.Count);
     }
 
     void Update()
