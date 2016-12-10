@@ -8,6 +8,7 @@ public class SpikeCoral : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            // Hurt me, daddy.
             other.GetComponentInParent<PlayerHealth>().Hurt();
         }
     }

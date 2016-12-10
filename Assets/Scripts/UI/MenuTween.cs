@@ -9,12 +9,13 @@ public class MenuTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
    
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.DOScale(new Vector3(2, 2, 2), .3f);
+        transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), .3f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         transform.DOScale(new Vector3(1, 1, 1), .3f);
     }
+    
 
 }
