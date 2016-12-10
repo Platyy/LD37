@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class PlayerController : MonoBehaviour {
@@ -16,16 +17,33 @@ public class PlayerController : MonoBehaviour {
 
     public Rigidbody m_RB;
     public GameObject m_Body;
+
+    public Slider m_BoostSlider;
+    public float m_MaxBoost = 2f;
+    private float m_BoostAmount = 2f;
+    private bool m_Refilling = false;
+
+    private float m_PrevAngle;
+
+    public ParticleSystem m_Ink;
+
+    public GameObject m_LegParent;
+
+    private List<Legs> m_Legs = new List<Legs>();
     
     void Start()
     {
         //m_RB = GetComponent<Rigidbody>();
         m_DTRemaining = m_DoubletapTime;
+        m_BoostAmount = m_MaxBoost;
+        GetLegs();
+        Debug.Log(m_Legs.Count);
     }
 
     void Update()
     {
         Jump();
+        // compare Vector3.Up and .Right against current transform.direction
     }
 
     void FixedUpdate()
@@ -50,6 +68,7 @@ public class PlayerController : MonoBehaviour {
 
         //Ta Daaa
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, _angle + 90)), Time.deltaTime * m_RotationSpeed);
+        m_PrevAngle = _angle;
     }
 
     void Move()
@@ -66,13 +85,46 @@ public class PlayerController : MonoBehaviour {
 
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetMouseButtonDown(0))
         {
             m_RB.AddForce(transform.up * m_JumpPower, ForceMode.Impulse);
             //transform.DOMove(transform.position + transform.up, 0.2f);
         }
+        if(Input.GetMouseButton(0) && m_BoostAmount >= 0 && !m_Refilling)
+        {
+            if(!m_Ink.isPlaying)
+            {
+                m_Ink.Play();
+            }
+            m_RB.AddForce(transform.up * m_JumpPower, ForceMode.Acceleration);
+            m_BoostAmount -= Time.deltaTime;
+            m_BoostSlider.value = m_BoostAmount;
+            if(m_BoostAmount <= 0.01f)
+            {
+                m_Refilling = true;
+            }
+        }
+        if(m_Ink.isPlaying && (m_BoostAmount <= 0.01f || !Input.GetMouseButton(0)))
+        {
+            m_Ink.Stop();
+        }
+        Fill();
     }
 
+    void Fill()
+    {
+        if(m_Refilling)
+        {
+            if (m_BoostAmount <= m_MaxBoost)
+            {
+                m_BoostAmount += Time.deltaTime;
+                m_BoostSlider.value = m_BoostAmount;
+            }
+            else
+                m_Refilling = false;
+        }
+    }
+    
     void Dash()
     {
         if(Input.GetKeyDown(KeyCode.A))
@@ -111,6 +163,18 @@ public class PlayerController : MonoBehaviour {
         else
         {
             m_ButtonCount = 0;
+        }
+    }
+
+    void GetLegs()
+    {
+        for (int i = 0; i < m_LegParent.transform.childCount; i++)
+        {
+            var f = m_LegParent.transform.GetChild(i);
+            for (int j = 0; j < f.childCount; j++)
+            {
+                m_Legs.Add(f.transform.GetChild(j).GetComponent<Legs>());
+            }
         }
     }
 
