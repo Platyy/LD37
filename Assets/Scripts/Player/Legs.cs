@@ -11,9 +11,19 @@ public class Legs : MonoBehaviour {
         m_RB = GetComponent<Rigidbody>();
     }
 
-    public void AddTorqueToLeg(float _torque)
+    void Update()
     {
-        m_RB.AddTorque(Vector3.forward * (-_torque * 100), ForceMode.Impulse);
+        AddTorqueToLeg();
+    }
+
+    public void AddTorqueToLeg()
+    {
+        float h = Input.GetAxis("Horizontal") * 50f * Time.deltaTime;
+        float v = Input.GetAxis("Vertical") * 50f * Time.deltaTime;
+
+
+        m_RB.AddTorque((Vector3.up * h), ForceMode.Impulse);
+        m_RB.AddTorque((Vector3.forward * v), ForceMode.Impulse);
     }
 
 }

@@ -17,8 +17,10 @@ public class CameraFollow : MonoBehaviour {
 
     void SetPosition()
     {
-        Vector3 _target = m_Player.TransformPoint(new Vector3(0, 0, m_Depth));
+        Vector3 _target = m_Player.TransformPoint(new Vector3(0, 2, m_Depth));
+
         transform.position = Vector3.SmoothDamp(transform.position, _target, ref m_RefVec, m_SmoothTime);
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, 4, 12), transform.position.z);
     }
 
 }
