@@ -13,11 +13,13 @@ public class PushCoral : MonoBehaviour {
 
     private bool m_Blowing = false;
 
+    public ParticleSystem m_Bubbles;
 
     void Start()
     {
         m_BlowTimeLeft = m_BlowTime;
         m_DownTimeLeft = m_DownTime;
+        
     }
 
     void Update()
@@ -37,6 +39,9 @@ public class PushCoral : MonoBehaviour {
     {
         if(!m_Blowing)
         {
+            if(m_Bubbles.isPlaying)
+                m_Bubbles.Stop();
+
             m_DownTimeLeft -= Time.deltaTime;
             if(m_DownTimeLeft <= 0)
             {
@@ -46,6 +51,8 @@ public class PushCoral : MonoBehaviour {
         }
         else
         {
+            if (!m_Bubbles.isPlaying)
+                m_Bubbles.Play();
             m_BlowTimeLeft -= Time.deltaTime;
             if (m_BlowTimeLeft <= 0)
             {
