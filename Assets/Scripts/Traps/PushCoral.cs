@@ -19,7 +19,6 @@ public class PushCoral : MonoBehaviour {
     {
         m_BlowTimeLeft = m_BlowTime;
         m_DownTimeLeft = m_DownTime;
-        
     }
 
     void Update()
