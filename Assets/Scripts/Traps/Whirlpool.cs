@@ -23,19 +23,25 @@ public class Whirlpool : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Collider[] cols = Physics.OverlapSphere(transform.position, GetComponent<SphereCollider>().radius);
+        // Collider[] cols = Physics.OverlapSphere(transform.position, GetComponent<SphereCollider>().radius);
 
         Vector3 forceDir = transform.position - other.transform.position;
         // other.GetComponentInParent<Rigidbody>().AddForce(forceDir.normalized * m_PullForce * Time.fixedDeltaTime, ForceMode.Impulse);
 
-        foreach (Collider col in cols)
+        //foreach (Collider col in cols)
+        //{
+        Rigidbody rb = other.GetComponent<Rigidbody>();
+        if (rb != null)
         {
-            Rigidbody rb = col.GetComponent<Rigidbody>();
+            rb = other.GetComponentInParent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddForce(forceDir.normalized*m_PullForce*Time.fixedDeltaTime, ForceMode.Acceleration);
+                m_IsPulling = true;
+                rb.AddForce(forceDir.normalized * m_PullForce * Time.fixedDeltaTime, ForceMode.Acceleration);
+               // Debug.Log(other.name);
             }
         }
+        //}
 
 
 
