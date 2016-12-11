@@ -46,7 +46,7 @@ public class UrchinShooter : MonoBehaviour
 
     private void Shoot()
     {
-        GameObject _spikeGO = Instantiate(m_SpikePrefab, transform.position, Quaternion.identity);
+        GameObject _spikeGO = Instantiate(m_SpikePrefab, transform.position, transform.rotation);
         Destroy(_spikeGO, 3.0f);
     }
 }
