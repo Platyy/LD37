@@ -12,10 +12,12 @@ public class Whirlpool : MonoBehaviour
     public float m_DeathTimer = 1.0f;
     public Transform m_DeathTrigger;
 
+    private float m_DeathTime = 1.0f;
+
     private void Update()
     {
         Turn();
-        Pull();
+        //Pull();
         
     }
 
@@ -28,7 +30,7 @@ public class Whirlpool : MonoBehaviour
     {
         if (m_IsPulling)
         {
-            Debug.Log("Pulling");
+            //Debug.Log("Pulling");
         }
     }
 
@@ -57,7 +59,8 @@ public class Whirlpool : MonoBehaviour
                         m_DeathTimer -= Time.deltaTime;
                         if (m_DeathTimer <= 0.0f)
                         {
-                            rb.GetComponent<PlayerHealth>().Hurt();
+                            rb.GetComponent<PlayerHealth>().Kill();
+                            m_DeathTimer = m_DeathTime;
                         }
                     }
                 }

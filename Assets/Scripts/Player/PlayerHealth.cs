@@ -55,6 +55,14 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    public void Kill()
+    {
+        for (int i = 0; i < m_Health; i++)
+        {
+            Hurt();
+        }
+    }
+
     /// <summary>
     /// Kill me.
     /// </summary>
