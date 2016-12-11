@@ -15,6 +15,8 @@ public class PushCoral : MonoBehaviour {
 
     public AudioSource m_Blow;
 
+    public Animator m_Anim;
+
     public ParticleSystem m_Bubbles;
 
     void Start()
@@ -42,7 +44,7 @@ public class PushCoral : MonoBehaviour {
         {
             if(m_Bubbles.isPlaying)
                 m_Bubbles.Stop();
-
+            m_Anim.SetBool("Blowing", true);
             m_DownTimeLeft -= Time.deltaTime;
             if(m_DownTimeLeft <= 0)
             {
@@ -56,6 +58,7 @@ public class PushCoral : MonoBehaviour {
             {
                 m_Bubbles.Play();
                 m_Blow.Play();
+                m_Anim.SetBool("Blowing", false);
             }
             m_BlowTimeLeft -= Time.deltaTime;
             if (m_BlowTimeLeft <= 0)
