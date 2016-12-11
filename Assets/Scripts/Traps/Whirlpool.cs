@@ -5,12 +5,23 @@ using UnityEngine;
 public class Whirlpool : MonoBehaviour
 {
     public float m_PullForce = 5.0f;
-    //public float m_PulledTimer
+    public float m_TurnSpeed = 5.0f;
     public bool m_IsPulling = false;
+
+    public float m_DeathRange = 0.3f;
+    public float m_DeathTimer = 1.0f;
+    public Transform m_DeathTrigger;
 
     private void Update()
     {
+        Turn();
         Pull();
+        
+    }
+
+    private void Turn()
+    {
+        transform.Rotate(Vector3.up, m_TurnSpeed*Time.deltaTime);
     }
 
     private void Pull()
@@ -38,12 +49,21 @@ public class Whirlpool : MonoBehaviour
             {
                 m_IsPulling = true;
                 rb.AddForce(forceDir.normalized * m_PullForce * Time.fixedDeltaTime, ForceMode.Acceleration);
-               // Debug.Log(other.name);
+                // Debug.Log(other.name);
+                if (rb.tag == "Player")
+                {
+                    if (Vector3.Distance(m_DeathTrigger.position, rb.position) <= m_DeathRange)
+                    {
+                        m_DeathTimer -= Time.deltaTime;
+                        if (m_DeathTimer <= 0.0f)
+                        {
+                            rb.GetComponent<PlayerHealth>().Hurt();
+                        }
+                    }
+                }
             }
         }
         //}
-
-
 
     }
 
@@ -55,4 +75,5 @@ public class Whirlpool : MonoBehaviour
         }
     }
 
+    
 }
