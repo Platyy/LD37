@@ -32,7 +32,8 @@ public class CameraShake : MonoBehaviour
         {
             m_initialPosition = transform.position;
 
-            Vector3 shakePos = Random.insideUnitSphere*m_ShakeAmount*m_PauseMenu.GetShakeDamper();
+            Vector3 shakePos = Random.insideUnitSphere*m_ShakeAmount;
+            //*m_PauseMenu.GetShakeDamper();
             transform.position = new Vector3(transform.position.x + shakePos.x, transform.position.y + shakePos.y, transform.position.z + shakePos.z);
 
             m_ShakeTimer -= Time.deltaTime;

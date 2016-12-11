@@ -1,17 +1,15 @@
 fileFormatVersion: 2
-guid: 15de322eb9545434c9b0fccd8584abd6
-timeCreated: 1481434064
+guid: 34489113b3e40cf47a0f87510e24c72c
+timeCreated: 1481449168
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: stone_lp
     400000: //RootNode
-    400002: stone_lp
-    2300000: stone_lp
-    3300000: stone_lp
-    4300000: stone_lp
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cone001
   materials:
     importMaterials: 1
     materialName: 0
