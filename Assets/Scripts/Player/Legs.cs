@@ -13,7 +13,7 @@ public class Legs : MonoBehaviour {
 
     void Update()
     {
-        AddTorqueToLeg();
+        //AddTorqueToLeg();
     }
 
     public void AddTorqueToLeg()

@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour {
 
     void Start()
     {
-
         //m_RB = GetComponent<Rigidbody>();
         m_DTRemaining = m_DoubletapTime;
         m_BoostAmount = m_MaxBoost;
@@ -209,7 +208,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
-
+    
     public float GetBoostAmount()
     {
         return m_BoostAmount;
