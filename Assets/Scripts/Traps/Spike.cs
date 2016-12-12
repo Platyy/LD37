@@ -5,13 +5,18 @@ using UnityEngine;
 public class Spike : MonoBehaviour
 {
     private Rigidbody m_RB;
+    private AudioSource m_Source;
     public float m_ShotForce = 5.0f;
     public float m_PushForce = 3.0f;
 
+    public AudioClip m_ShotClip;
+
     private void Start()
     {
+        m_Source = GetComponent<AudioSource>();
         m_RB = GetComponent<Rigidbody>();
         m_RB.AddForce(transform.parent.transform.up * m_ShotForce, ForceMode.Impulse);
+        m_Source.PlayOneShot(m_ShotClip);
     }
 
     private void OnTriggerEnter(Collider other)

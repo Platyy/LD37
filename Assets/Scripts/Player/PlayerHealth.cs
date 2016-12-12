@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     private PlayerController m_Controller;
+    private PlayerSounds m_Sounds;
 
     public int m_Health = 8;
     public GameObject m_LostLeg;
@@ -13,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     private void Start()
     {
         m_Controller = GetComponent<PlayerController>();
+        m_Sounds = GetComponent<PlayerSounds>();
     }
 
     private void Update()
@@ -36,7 +38,8 @@ public class PlayerHealth : MonoBehaviour
         
         // Decrease players health
         m_Health--;
-        Debug.Log(m_Health);
+        m_Sounds.PlayHurtSound();
+        //Debug.Log(m_Health);
 
         // TODO: This is hacky and bad. 
         // Loops through the legs and sets the legs at the index of our current health inactive
@@ -71,6 +74,7 @@ public class PlayerHealth : MonoBehaviour
         FindObjectOfType<CameraFollow>().m_Depth = -4.0f;
         m_Controller.m_IsDead = true;
         m_Controller.m_Ink.Play();
+        m_Sounds.PlayDeathSound();
         Debug.Log("What do we do when we die?");
     }
 }

@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     public float m_MoveSpeed = 1f;
     public float m_JumpPower = 5f;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour {
 
     public Rigidbody m_RB;
     public GameObject m_Body;
+    private PlayerSounds m_Sounds;
 
     public Slider m_BoostSlider;
     public float m_MaxBoost = 2f;
@@ -35,10 +37,12 @@ public class PlayerController : MonoBehaviour {
     public GameObject m_LegParent;
 
     private List<Legs> m_Legs = new List<Legs>();
-    
+
 
     void Start()
     {
+        m_Sounds = GetComponent<PlayerSounds>();
+
         //m_RB = GetComponent<Rigidbody>();
         m_DTRemaining = m_DoubletapTime;
         m_BoostAmount = m_MaxBoost;
@@ -72,7 +76,10 @@ public class PlayerController : MonoBehaviour {
         //Move();
         Jump();
         //Dash();
-        LookAtMouse();
+        if (!m_IsDead)
+        {
+            LookAtMouse();
+        }
         //m_RB.velocity = new Vector3(Mathf.Clamp(m_RB.velocity.x, -m_MaxVelocity, m_MaxVelocity), m_RB.velocity.y, m_RB.velocity.z);
     }
 
@@ -99,34 +106,49 @@ public class PlayerController : MonoBehaviour {
         {
             m_RB.velocity = new Vector3(m_RB.velocity.x - m_MoveSpeed, m_RB.velocity.y, m_RB.velocity.z);
         }
-        if(Input.GetKey(KeyCode.D)) // Right
+        if (Input.GetKey(KeyCode.D)) // Right
         {
             m_RB.velocity = new Vector3(m_RB.velocity.x + m_MoveSpeed, m_RB.velocity.y, m_RB.velocity.z);
         }
     }
 
+    private bool m_JetSoundPlayed = false;
     void Jump()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             m_RB.AddForce(transform.up * m_JumpPower, ForceMode.Impulse);
+            m_Sounds.PlaySwimSound();
             //transform.DOMove(transform.position + transform.up, 0.2f);
         }
-        if(Input.GetMouseButton(1) && m_BoostAmount >= 0 && !m_Refilling)
+        if (Input.GetMouseButton(1) && m_BoostAmount >= 0 && !m_Refilling)
         {
-            if(!m_Ink.isPlaying)
+            if (!m_JetSoundPlayed)
+            {
+                m_Sounds.PlayJetSound();
+                m_JetSoundPlayed = true;
+            }
+
+            if (!m_Ink.isPlaying)
             {
                 m_Ink.Play();
             }
             m_RB.AddForce(transform.up * m_JumpPower, ForceMode.Acceleration);
+            
             m_BoostAmount -= Time.deltaTime;
             m_BoostSlider.value = m_BoostAmount;
-            if(m_BoostAmount <= 0.01f)
+            if (m_BoostAmount <= 0.01f)
             {
                 m_Refilling = true;
             }
         }
-        if(m_Ink.isPlaying && (m_BoostAmount <= 0.01f || !Input.GetMouseButton(0)))
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            m_JetSoundPlayed = false;
+        }
+
+        if (m_Ink.isPlaying && (m_BoostAmount <= 0.01f || !Input.GetMouseButton(0)))
         {
             m_Ink.Stop();
         }
@@ -135,10 +157,10 @@ public class PlayerController : MonoBehaviour {
 
     void Fill()
     {
-        if(m_Refilling)
+        if (m_Refilling)
         {
             m_RefilledAmount -= Time.deltaTime;
-            if(m_RefilledAmount <= 0)
+            if (m_RefilledAmount <= 0)
             {
                 if (m_BoostAmount <= m_MaxBoost)
                 {
@@ -153,12 +175,12 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
-    
+
     void Dash()
     {
-        if(Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            if(m_DTRemaining >= 0 && m_ButtonCount == 1)
+            if (m_DTRemaining >= 0 && m_ButtonCount == 1)
             {
                 Debug.Log("Dashed");
                 transform.DOMoveX(transform.position.x - 2, 0.2f);
@@ -201,14 +223,14 @@ public class PlayerController : MonoBehaviour {
         for (int i = 0; i < m_LegParent.transform.childCount; i++)
         {
             f = m_LegParent.transform.GetChild(i);
-            
+
             if (i == legIndex)
             {
                 f.gameObject.SetActive(false);
             }
         }
     }
-    
+
     public float GetBoostAmount()
     {
         return m_BoostAmount;
